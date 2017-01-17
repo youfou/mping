@@ -36,7 +36,7 @@ host3.com | 77, 0.4%, 37.4/39.1/43.6
 
 > The `count` number represents how many replies returned from each host.
 
-Also Check out the help stuff for more instructions:
+Also check out the help stuff for more instructions:
 
 ```shell
 mping -h
