@@ -1,3 +1,5 @@
+[中文说明](https://github.com/youfou/mping/blob/master/README_ZHCN.md)
+
 # mping
 
 Ping multiple hosts concurrently and find the fastest to you.
@@ -10,27 +12,35 @@ Ping multiple hosts concurrently and find the fastest to you.
 
 Just tell which host is the fastest:
 
-    mping host1.com host2.com host3.com
+```shell
+mping host1.com host2.com host3.com
+```
 
 Get hosts from a file, and ping them:
 
-    mping -p PATH/TO/THE/FILE.txt
+```shell
+mping -p PATH/TO/THE/FILE.txt
+```
 
 > Read **Input File** section below for more details.
 
 The results will be like this:
 
-    host      | count, loss%, min/avg/max
-    ----------|--------------------------
-    host1.com | 99, 0.0%, 5.4/6.8/14.1
-    host2.com | 90, 0.0%, 23.8/33.5/39.5
-    host3.com | 77, 0.4%, 37.4/39.1/43.6
+```
+host      | count, loss%, min/avg/max
+----------|--------------------------
+host1.com | 99, 0.0%, 5.4/6.8/14.1
+host2.com | 90, 0.0%, 23.8/33.5/39.5
+host3.com | 77, 0.4%, 37.4/39.1/43.6
+```
 
-> The `count` number represents that how many pings returned to the each host.
+> The `count` number represents how many replies returned from each host.
 
 Also Check out the help stuff for more instructions:
 
-    mping -h
+```shell
+mping -h
+```
 
 ## Input File
 
@@ -43,9 +53,11 @@ When use a plain text file, just place each host in a line.
 
 For example:
 
-    host1.com
-    host2.com
-    host3.com
+```
+host1.com
+host2.com
+host3.com
+```
 
 **Json File**
 
