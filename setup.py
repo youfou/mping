@@ -15,7 +15,7 @@ except ImportError:
 
 setup(
     name='mping',
-    version='0.1.0',
+    version='0.1.1',
     packages=find_packages(),
     package_data={
         '': ['*.md'],
@@ -32,7 +32,7 @@ setup(
     license='Apache 2.0',
     author='Youfou',
     author_email='youfou@qq.com',
-    description='Ping hosts concurrently and find the fastest to you.',
+    description='Ping multiple hosts concurrently and find the fastest to you.',
     long_description=long_description,
     keywords=[
         'ping',

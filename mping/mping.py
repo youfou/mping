@@ -244,7 +244,7 @@ def results_string(prs):
 
 def main():
     ap = argparse.ArgumentParser(
-        description='Ping hosts concurrently and find the fastest to you.',
+        description='Ping multiple hosts concurrently and find the fastest to you.',
         epilog='A plain text file or a json can be used as the -p/--path argument: '
                '1. Plain text file: hosts in lines; '
                '2. Json file: hosts in a list or a object (dict) with names.')

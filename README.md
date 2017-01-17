@@ -1,6 +1,6 @@
 # mping
 
-Ping hosts concurrently and find the fastest to you.
+Ping multiple hosts concurrently and find the fastest to you.
 
 ## Installation
 
@@ -20,15 +20,15 @@ Get hosts from a file, and ping them:
 
 The results will be like this:
 
-    host       | count, loss%, min/avg/max
-    -----------|--------------------------
-    shuame.com | 433, 0.0%, 5.4/6.8/14.1
-    qq.com     | 90, 0.0%, 31.8/33.5/39.5
-    baidu.com  | 77, 0.0%, 37.4/39.1/43.6
+    host      | count, loss%, min/avg/max
+    ----------|--------------------------
+    host1.com | 99, 0.0%, 5.4/6.8/14.1
+    host2.com | 90, 0.0%, 23.8/33.5/39.5
+    host3.com | 77, 0.4%, 37.4/39.1/43.6
 
 > The `count` number represents that how many pings returned to the each host.
 
-Also check out the help stuff for more instructions:
+Also Check out the help stuff for more instructions:
 
     mping -h
 
