@@ -122,7 +122,9 @@ class PingTask(threading.Thread):
         :param interval: the max time to sleep between each ping
         """
 
-        if re.match(r'[\d.]+$', host):
+        self.host = host
+
+        if re.match(r'(?:\d{1,3}\.){3}(?:\d{1,3})$', host):
             self.ip = host
         else:
             print('Resolving host: {}'.format(host))
@@ -136,20 +138,24 @@ class PingTask(threading.Thread):
         self.interval = interval
 
         self.pr = PingResults()
-        self.terminated = False
+        self.finished = False
 
         super(PingTask, self).__init__()
 
     def run(self):
-        while not self.terminated:
-            rtt = ping(self.ip, timeout=self.timeout)
+        while not self.finished:
+            try:
+                rtt = ping(self.ip, timeout=self.timeout)
+            except OSError:
+                print('Unable to ping: {}'.format(self.host))
+                break
             self.pr.append(rtt)
             escaped = rtt or self.timeout
             if escaped < self.interval:
                 time.sleep(self.interval - escaped)
 
-    def stop(self):
-        self.terminated = True
+    def finish(self):
+        self.finished = True
 
 
 def mping(hosts, duration=DEFAULT_DURATION, timeout=1.0, interval=0.0, quiet=False, sort=True):
@@ -164,7 +170,10 @@ def mping(hosts, duration=DEFAULT_DURATION, timeout=1.0, interval=0.0, quiet=Fal
     :return: A list of PingResults
     """
 
-    def ret(_tasks, _sort=True):
+    def results(_tasks, _sort=True):
+        """
+        Return the current status of a list of PingTask
+        """
         r = list(zip(heads, [t.pr for t in _tasks]))
         if _sort:
             r.sort(key=lambda x: x[1].valid_count, reverse=True)
@@ -186,7 +195,7 @@ def mping(hosts, duration=DEFAULT_DURATION, timeout=1.0, interval=0.0, quiet=Fal
     else:
         doing_msg = 'Pinging {} hosts'.format(len(hosts))
         if duration > 0:
-            doing_msg += ' within {} seconds'.format(duration)
+            doing_msg += ' within {} seconds'.format(int(duration))
         doing_msg += '...'
 
         if quiet:
@@ -195,26 +204,35 @@ def mping(hosts, duration=DEFAULT_DURATION, timeout=1.0, interval=0.0, quiet=Fal
         for task in tasks:
             task.start()
 
-        start = clock()
-        remain = duration
-
         try:
-            while remain > 0 or duration <= 0:
-                time.sleep(min(remain, 1))
+            start = clock()
+            while True:
+
+                if duration > 0:
+                    remain = duration + start - clock()
+                    if remain > 0:
+                        time.sleep(min(remain, 1))
+                    else:
+                        break
+                else:
+                    time.sleep(1)
+
                 if not quiet:
                     print('\n{}\n{}'.format(
-                        results_string(ret(tasks, True)[:10]),
+                        results_string(results(tasks, True)[:10]),
                         doing_msg))
-                remain = duration + start - clock()
+
         except KeyboardInterrupt:
             print()
         finally:
             for task in tasks:
-                task.stop()
-            for task in tasks:
-                task.join()
+                task.finish()
 
-        return ret(tasks, sort)
+            # Maybe not necessary?
+            # for task in tasks:
+            #     task.join()
+
+        return results(tasks, sort)
 
 
 def table_string(rows):
@@ -258,7 +276,7 @@ def main():
         help='specify a file path to get the hosts from')
 
     ap.add_argument(
-        '-d', '--duration', type=int, default=DEFAULT_DURATION, metavar='secs',
+        '-d', '--duration', type=float, default=DEFAULT_DURATION, metavar='secs',
         help='the duration how long the progress lasts (default: {})'.format(DEFAULT_DURATION))
 
     ap.add_argument(
@@ -318,6 +336,7 @@ def main():
 
     if not args.quiet:
         print('\nFinal Results:\n')
+
     print(results_string(results))
 
 

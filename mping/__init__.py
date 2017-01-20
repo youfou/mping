@@ -25,7 +25,7 @@ GitHub: https://github.com/youfou/mping
 from .mping import mping, results_string
 
 __title__ = 'mping'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 __author__ = 'Youfou'
 __license__ = 'Apache 2.0'
 __copyright__ = 'Copyright 2017 Youfou'
